@@ -8,7 +8,7 @@ import kotlin.math.cos
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,20 +19,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun calculateTip() {
+    private fun calculateTip() {
         val stringInTextField = binding.costOfService.text.toString()
-        val cost = stringInTextField.toDouble()
-        val selectedId = binding.tipOptions.checkedRadioButtonId
+        val cost = stringInTextField.toDoubleOrNull()
 
-        val tipPercentage = when(selectedId){
+        val tipPercentage = when(binding.tipOptions.checkedRadioButtonId){
             R.id.option_15_percent -> 0.15
             R.id.option_18_percent -> 0.18
             else -> 0.20
         }
-
+        //ignoring Null Value from cost of service text field
+        if(cost == null){
+            binding.tipResult.text = ""
+            return
+        }
         var tip = tipPercentage * cost
-        val roundUp = binding.roundUpSwich.isChecked
-        if(roundUp){
+        if(binding.roundUpSwich.isChecked){
             tip = kotlin.math.ceil(tip)
         }
 
